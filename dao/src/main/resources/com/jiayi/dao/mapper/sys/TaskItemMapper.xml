@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiayi.dao.mapper.sys.TaskItemMapper">
+    <resultMap id="BaseResultMap" type="com.jiayi.dao.data.sys.TaskItemDO">
+        <id column="task_item_id" jdbcType="INTEGER" property="taskItemId"/>
+        <result column="task_code" jdbcType="VARCHAR" property="taskCode"/>
+        <result column="item_code" jdbcType="VARCHAR" property="itemCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        task_item_id,
+        task_code,
+        item_code
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_task_item
+        where task_item_id = #{taskItemId,jdbcType=INTEGER}
+    </select>
+    <insert id="insert" parameterType="com.jiayi.dao.data.sys.TaskItemDO">
+        insert into sys_task_item (task_item_id, task_code, item_code
+        )
+        values (#{taskItemId,jdbcType=INTEGER}, #{taskCode,jdbcType=VARCHAR}, #{itemCode,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.jiayi.dao.data.sys.TaskItemDO">
+        insert into sys_task_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskItemId != null">
+                task_item_id,
+            </if>
+            <if test="taskCode != null">
+                task_code,
+            </if>
+            <if test="itemCode != null">
+                item_code,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskItemId != null">
+                #{taskItemId,jdbcType=INTEGER},
+            </if>
+            <if test="taskCode != null">
+                #{taskCode,jdbcType=VARCHAR},
+            </if>
+            <if test="itemCode != null">
+                #{itemCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="taskItemList" resultType="com.jiayi.dao.data.sys.TaskItemDO">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_task_item
+        <where>
+            <if test="itemCodes != null and itemCodes.size() > 0">
+                and item_code in
+                <foreach collection="itemCodes" item="itemCodeOne" separator="," open="(" close=")">
+                    #{itemCodeOne, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

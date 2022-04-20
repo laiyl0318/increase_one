@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiayi.dao.mapper.sys.OrgMapper">
+    <resultMap id="BaseResultMap" type="com.jiayi.dao.data.sys.OrgDO">
+        <id column="org_id" jdbcType="INTEGER" property="orgId"/>
+        <result column="org_name" jdbcType="VARCHAR" property="orgName"/>
+        <result column="org_code" jdbcType="VARCHAR" property="orgCode"/>
+        <result column="org_full_code" jdbcType="VARCHAR" property="orgFullCode"/>
+        <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
+        <result column="status" jdbcType="BIT" property="status"/>
+        <result column="level" jdbcType="TINYINT" property="level"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        org_id,
+        org_name,
+        org_code,
+        org_full_code,
+        parent_id,
+        status,
+        level,
+        create_time,
+        update_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_org
+        where org_id = #{orgId,jdbcType=INTEGER}
+    </select>
+    <insert id="saveOrg" parameterType="com.jiayi.dao.data.sys.OrgDO" keyProperty="orgId" useGeneratedKeys="true">
+        insert into sys_org
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orgName != null">
+                org_name,
+            </if>
+            <if test="orgCode != null">
+                org_code,
+            </if>
+            <if test="orgFullCode != null">
+                org_full_code,
+            </if>
+            <if test="parentId != null">
+                parent_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orgName != null">
+                #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgFullCode != null">
+                #{orgFullCode,jdbcType=VARCHAR},
+            </if>
+            <if test="parentId != null">
+                #{parentId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="editOrg">
+        update sys_org
+        <set>
+            <if test="orgName != null">
+                org_name = #{orgName,jdbcType=VARCHAR},
+            </if>
+            <if test="orgCode != null">
+                org_code = #{orgCode,jdbcType=VARCHAR},
+            </if>
+            <if test="orgFullCode != null">
+                org_full_code = #{orgFullCode,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where org_id = #{orgId,jdbcType=INTEGER}
+    </update>
+    <select id="orgList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_org
+        <where>
+            status = 1
+            <if test="parentId != null">
+                AND parent_id = #{parentId, jdbcType = INTEGER}
+            </if>
+            <if test="orgCode != null">
+                AND org_code = #{orgCode, jdbcType = VARCHAR}
+            </if>
+            <if test="orgFullCode != null">
+                AND org_full_code like #{orgFullCode, jdbcType = VARCHAR}"%"
+            </if>
+            <if test="orgName != null">
+                AND org_name = #{orgName, jdbcType = VARCHAR}
+            </if>
+            ORDER BY org_id ASC
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiayi.dao.mapper.sys.UserMapper">
+    <resultMap id="BaseResultMap" type="com.jiayi.dao.data.sys.UserDO">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="user_mobile" jdbcType="VARCHAR" property="userMobile"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="user_status" jdbcType="TINYINT" property="userStatus"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="org_full_code" jdbcType="VARCHAR" property="orgFullCode"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id,
+        user_name,
+        password,
+        user_mobile,
+        nick_name,
+        create_time,
+        update_time,
+        user_status,
+        org_id,
+        org_full_code
+    </sql>
+    <sql id="Columns_T">
+        t.user_id,
+        t.user_name,
+        t.password,
+        t.user_mobile,
+        t.nick_name,
+        t.create_time,
+        t.update_time,
+        t.user_status,
+        t.org_id,
+        t.org_full_code,
+    </sql>
+    <select id="getUserByQuery" resultType="com.jiayi.dao.data.sys.UserDO">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        <where>
+            and user_status = 1
+            <if test="userName != null">
+                and user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+
+            <if test="userMobile != null">
+                and user_mobile = #{userMobile,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        where user_id = #{userId,jdbcType=INTEGER}
+    </select>
+    <insert id="insert" parameterType="com.jiayi.dao.data.sys.UserDO">
+        insert into sys_user (user_id, user_name,
+        password, user_mobile,nick_name,
+        create_time, update_time,
+        user_status)
+        values (#{userId,jdbcType=INTEGER},#{userName,jdbcType=VARCHAR},
+        #{password,jdbcType=VARCHAR}, #{userMobile,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+        #{userStatus,jdbcType=TINYINT})
+    </insert>
+    <insert id="saveUser" parameterType="com.jiayi.dao.data.sys.UserDO" keyProperty="userId"
+            useGeneratedKeys="true">
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="userMobile != null">
+                user_mobile,
+            </if>
+            <if test="nickName != null">
+                nick_name,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="userStatus != null">
+                user_status,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userMobile != null">
+                #{userMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="userStatus != null">
+                #{userStatus,jdbcType=TINYINT},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=TINYINT},
+            </if>
+            <if test="orgFullCode != null">
+                #{orgFullCode,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="userList" resultMap="BaseResultMap">
+        select
+        <include refid="Columns_T"/>
+        from sys_user t
+        <if test="(roleCodes != null and roleCodes.size() > 0) or (notInRoleCodes != null and notInRoleCodes.size() != 0)">
+            left join sys_user_role ur on t.user_id = ur.user_id
+        </if>
+        <where>
+            <if test="searchKey != null">
+                and ( t.nick_name = #{searchKey,jdbcType=VARCHAR} or t.user_mobile = #{searchKey,jdbcType=VARCHAR}
+                or t.user_name = #{searchKey,jdbcType=VARCHAR})
+            </if>
+            <if test="userStatus != null">
+                and t.user_status = #{userStatus,jdbcType=TINYINT}
+            </if>
+            <if test="userName != null and userName != ''">
+                and t.user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="userMobile != null and userMobile != ''">
+                and t.user_mobile = #{userMobile,jdbcType=VARCHAR}
+            </if>
+            <if test="nickName != null and nickName != ''">
+                and t.nick_name = #{nickName,jdbcType=VARCHAR}
+            </if>
+            <if test="roleCodes != null and roleCodes.size() > 0">
+                and ur.role_code in
+                <foreach collection="roleCodes" separator="," open="(" close=")" item="roleCodeItem">
+                    #{roleCodeItem, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+
+            <if test="notInRoleCodes != null and notInRoleCodes.size() > 0">
+                and ur.role_code not in
+                <foreach collection="notInRoleCodes" separator="," open="(" close=")" item="roleCodeItem">
+                    #{roleCodeItem, jdbcType=VARCHAR}
+                </foreach>
+            </if>
+            <choose>
+                <when test="userIds != null and userIds.size() > 0">
+                    and t.user_id in
+                    <foreach collection="userIds" separator="," open="(" close=")" item="userIdItem">
+                        #{userIdItem, jdbcType=INTEGER}
+                    </foreach>
+                </when>
+                <otherwise>
+                    and t.user_status != 2
+                </otherwise>
+            </choose>
+        </where>
+        group by t.user_id order by t.user_id desc
+    </select>
+
+    <update id="editUser">
+        update sys_user
+        <set>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userMobile != null">
+                user_mobile = #{userMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="userStatus != null">
+                user_status = #{userStatus,jdbcType=TINYINT},
+            </if>
+            <if test="orgId != null">
+                org_id = #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="orgFullCode != null">
+                org_full_code = #{orgFullCode,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
+</mapper>

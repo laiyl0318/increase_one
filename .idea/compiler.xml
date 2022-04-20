@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api" />
+        <module name="common" />
+        <module name="auth" />
+        <module name="service-impl" />
+        <module name="dao" />
+        <module name="model" />
+        <module name="service" />
+        <module name="domain" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api" options="-parameters" />
+      <module name="auth" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="dao" options="-parameters" />
+      <module name="domain" options="-parameters" />
+      <module name="increase-one" options="-parameters" />
+      <module name="model" options="-parameters" />
+      <module name="service" options="-parameters" />
+      <module name="service-impl" options="-parameters" />
+    </option>
+  </component>
+</project>

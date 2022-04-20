@@ -1,0 +1,29 @@
+server:
+  port: 8083
+  domain: 127.0.0.1
+  check-permission: false
+  check-sign: true
+  env-tag: dev
+spring:
+  application:
+    name: increase-one-api
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    include: database
+  servlet:
+    multipart:
+      max-file-size: 10MB
+redis:
+  host: 127.0.0.1
+  port: 6379
+  lettuce:
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+mybatis:
+  configuration:
+  #    log-impl: org.apache.ibatis.logging.log4j.Log4jImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
